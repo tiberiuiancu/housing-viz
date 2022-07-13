@@ -6,7 +6,8 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+priority-queue = "1.2.2"
 
 [[bin]]
 name = "data_collection"
-path = "src/data_collection/sync/main.rs"
+path = "src/data_collection/main.rs"
