@@ -1,0 +1,13 @@
+# Use root/example as user/password credentials
+version: '3.1'
+
+services:
+  database-test:
+    image: mongo
+    container_name: mongo-test
+    ports:
+      - "27017-27019:27017-27019"
+    environment:
+      MONGO_INITDB_DATABASE: test-db
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: test
