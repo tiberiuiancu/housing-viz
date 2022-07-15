@@ -6,29 +6,32 @@ import (
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"go.mongodb.org/mongo-driver/mongo/readpref"
 )
 
 // Connection URI
 const uri = "mongodb://user:pass@sample.host:27017/?maxPoolSize=20&w=majority"
 
-func main() {
+type DatabaseConnection struct {
+	uri    string
+	client *mongo.Client
+}
+
+func initDBConn(uri string) (DatabaseConnection, error) {
 	// Create a new client and connect to the server
 	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(uri))
 
-	if err != nil {
-		panic(err)
-	}
-	defer func() {
-		if err = client.Disconnect(context.TODO()); err != nil {
-			panic(err)
-		}
-	}()
-
-	// Ping the primary
-	if err := client.Ping(context.TODO(), readpref.Primary()); err != nil {
-		panic(err)
+	if err == nil {
+		return DatabaseConnection{}, err
 	}
 
+	dbConn := DatabaseConnection{
+		uri,
+		client,
+	}
+
+	return dbConn, nil
+}
+
+func main() {
 	fmt.Println("Successfully connected and pinged.")
 }

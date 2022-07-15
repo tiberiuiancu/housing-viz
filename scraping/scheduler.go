@@ -8,7 +8,6 @@ import (
 type runnable interface {
 	run()
 	is_running() bool
-	// get_cooldown()
 	get_name() string
 }
 
