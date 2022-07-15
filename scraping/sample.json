@@ -1,0 +1,16 @@
+{
+    "url": "example.com/listing123",
+    "date": "2022-09-15",
+    "city": "Amsterdam",
+    "street": "Street name",
+    "street_number": "43h",
+    "post_code": "1064ab",
+    "lat": 1.23,
+    "long": 1.23,
+    "price": 1000,
+    "type": "apartment",
+    "n_bedrooms": 2,
+    "n_rooms": 3,
+    "surface": 100,
+    "construction_year": 1992
+}
