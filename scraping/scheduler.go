@@ -7,8 +7,8 @@ import (
 
 type runnable interface {
 	run()
-	is_running() bool
-	get_name() string
+	isRunning() bool
+	getName() string
 }
 
 type scheduler struct {
@@ -18,10 +18,10 @@ type scheduler struct {
 func (s scheduler) start() {
 	for {
 		for _, scraper := range s.scrapers {
-			if scraper.is_running() {
+			if scraper.isRunning() {
 				fmt.Println("Already running")
 			} else {
-				fmt.Println("Running ", scraper.get_name())
+				fmt.Println("Running ", scraper.getName())
 				go scraper.run()
 			}
 		}

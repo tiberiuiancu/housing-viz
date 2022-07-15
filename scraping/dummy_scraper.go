@@ -10,7 +10,7 @@ type DummyScraper struct {
 	running bool
 }
 
-func (s *DummyScraper) get_name() string {
+func (s *DummyScraper) getName() string {
 	return s.name
 }
 
@@ -23,6 +23,6 @@ func (s *DummyScraper) run() {
 	s.running = false
 }
 
-func (s *DummyScraper) is_running() bool {
+func (s *DummyScraper) isRunning() bool {
 	return s.running
 }
