@@ -1,4 +1,3 @@
 
 db-up:
-	docker run --name mongotest --rm -d mongo \
-		mongo -u
+	docker-compose start database-test
