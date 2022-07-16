@@ -1,28 +1,25 @@
 package main
 
-import (
-	"fmt"
-	"time"
-)
+import "time"
 
-type DummyScraper struct {
-	name    string
-	running bool
-}
-
-func (s *DummyScraper) getName() string {
-	return s.name
-}
-
-func (s *DummyScraper) run() {
-	s.running = true
-	for i := 0; i < 10; i++ {
-		fmt.Println("Doing some dummy stuff")
-		time.Sleep(time.Second)
+func dummyScraperRun() []Listing {
+	time.Sleep(time.Second)
+	return []Listing{
+		{
+			url:              "example.com/listing123",
+			date:             time.Now(),
+			city:             "Amsterdam",
+			street:           "Street name",
+			streetNumber:     "43h",
+			postCode:         "1064ab",
+			lat:              1.23,
+			long:             1.23,
+			price:            1000,
+			bedrooms:         2,
+			rooms:            3,
+			surface:          100,
+			constructionYear: 1992,
+			listingType:      "apartment",
+		},
 	}
-	s.running = false
-}
-
-func (s *DummyScraper) isRunning() bool {
-	return s.running
 }

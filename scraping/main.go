@@ -1,10 +1,12 @@
 package main
 
 func main() {
-	s := scheduler{
-		scrapers: []runnable{
-			&DummyScraper{name: "Dummy", running: false},
+	Scheduler{
+		scrapers: []Scraper{
+			{
+				name:     "Dummy",
+				runnable: dummyScraperRun,
+			},
 		},
-	}
-	s.start()
+	}.start()
 }
