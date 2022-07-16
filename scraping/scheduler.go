@@ -19,7 +19,7 @@ func (s Scheduler) start() {
 
 			if scraper.shouldRun() {
 				// run if necessary
-				scraper.run(sampleListing)
+				scraper.run(nil)
 			} else if scraper.isRunning {
 				// the goroutine was running; check if the run completed or collect results
 				for shouldReceive := true; shouldReceive; {

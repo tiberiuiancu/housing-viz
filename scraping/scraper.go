@@ -2,7 +2,7 @@ package main
 
 import "time"
 
-type Runnable func(lastScraped Listing, outputChan chan<- *Listing)
+type Runnable func(lastScraped *Listing, outputChan chan<- *Listing)
 
 type Scraper struct {
 	name        string
@@ -22,7 +22,7 @@ func (s Scraper) shouldRun() bool {
 	return !s.isRunning && s.nextRunTime.Before(time.Now())
 }
 
-func (s *Scraper) run(listing Listing) {
+func (s *Scraper) run(lastScraped *Listing) {
 	s.isRunning = true
-	go s.exec(listing, s.channel)
+	go s.exec(lastScraped, s.channel)
 }

@@ -20,7 +20,12 @@ var sampleListing = Listing{
 	listingType:      "apartment",
 }
 
-func dummyScraperRun(lastScraped Listing, outputChan chan<- *Listing) {
+func dummyScraperRun(lastScraped *Listing, outputChan chan<- *Listing) {
+	if lastScraped == nil {
+		// this scraper was never run before; scrape everythin
+		time.Sleep(time.Second) // implement in the future
+	}
+
 	time.Sleep(time.Second * 3)
 	outputChan <- &sampleListing
 	time.Sleep(time.Second * 4)
