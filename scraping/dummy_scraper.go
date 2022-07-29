@@ -22,7 +22,7 @@ var sampleListing = Listing{
 
 func dummyScraperRun(lastScraped *Listing, outputChan chan<- *Listing) {
 	if lastScraped == nil {
-		// this scraper was never run before; scrape everythin
+		// this scraper was never run before; scrape everything
 		time.Sleep(time.Second) // implement in the future
 	}
 
