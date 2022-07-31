@@ -21,7 +21,7 @@ func parariusScraperRun(lastScraped *Listing, outputChan chan<- *Listing) {
 		// get links on the page
 		link := e.Attr("href")
 
-		// append website domain name if necessary
+		// prepend website domain name if necessary
 		if link[0] == '/' {
 			link = "https://www.pararius.com" + link
 		}
