@@ -52,6 +52,10 @@ func ResolveAddressToCoordinates(address string) (float64, float64, error) {
 		return 0, 0, errors.New("Google Maps API response code " + string(decodedResponse.Status))
 	}
 
+	if len(decodedResponse.Results) < 1 {
+		return 0, 0, errors.New("API call returned no results")
+	}
+
 	return decodedResponse.Results[0].Geometry.Location.Lat,
 		decodedResponse.Results[0].Geometry.Location.Lng,
 		nil
