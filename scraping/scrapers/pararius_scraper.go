@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/gocolly/colly"
 	. "housing_viz/common"
+	"os"
 	"regexp"
 	"strconv"
 	"strings"
@@ -144,7 +145,7 @@ func ParariusScraperRun(outputChan chan<- *Listing) {
 	)
 
 	// if we land on a listing's page, scrape it
-	c.OnHTML(".listing-detail-summary", func(e *colly.HTMLElement) {
+	c.OnHTML(".page__row--listing", func(e *colly.HTMLElement) {
 		go func() {
 			listing, err := parariusListingFromHtml(e)
 			if err == nil {
@@ -181,7 +182,7 @@ func ParariusScraperRun(outputChan chan<- *Listing) {
 	})
 
 	//err := c.Visit("https://www.pararius.com")
-	err := c.Visit("https://www.pararius.com/apartment-for-rent/rotterdam/376bfeef/laan-op-zuid")
+	err := c.Visit("https://www.pararius.com/apartment-for-rent/amsterdam/acef39ca/jacob-van-lennepkade")
 	if err != nil {
 		fmt.Println(err)
 	}
