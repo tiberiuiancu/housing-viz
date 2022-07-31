@@ -8,24 +8,45 @@ import (
 	"time"
 )
 
-func parariusListingFromHtml(e *colly.HTMLElement) Listing {
+func parariusListingFromHtml(e *colly.HTMLElement) (Listing, error) {
+	// info
+	price := 1000
+	bedrooms := 2
+	rooms := 3
+	surface := 100
+	constructionYear := 1992
+	listingType := "apartment"
+
+	// address info
+	country := "NL"
+	city := "Amsterdam"
+	street := "street"
+	streetNumber := "43h"
+	postCode := "1064ab"
+	lat, lng, err := ResolveAddressToCoordinates(postCode)
+
+	if err != nil {
+		return sampleListing, err
+	}
+
 	return Listing{
 		ScraperName:      "Pararius",
 		Url:              e.Request.URL.String(),
 		Date:             time.Now(),
-		City:             "",
-		Street:           "",
-		StreetNumber:     "43h",
-		PostCode:         "1064ab",
-		Lat:              1.23,
-		Long:             1.23,
-		Price:            1000,
-		Bedrooms:         2,
-		Rooms:            3,
-		Surface:          100,
-		ConstructionYear: 1992,
-		ListingType:      "apartment",
-	}
+		Country:          country,
+		City:             city,
+		Street:           street,
+		StreetNumber:     streetNumber,
+		PostCode:         postCode,
+		Lat:              lat,
+		Lng:              lng,
+		Price:            price,
+		Bedrooms:         bedrooms,
+		Rooms:            rooms,
+		Surface:          surface,
+		ConstructionYear: constructionYear,
+		ListingType:      listingType,
+	}, nil
 }
 
 func ParariusScraperRun(outputChan chan<- *Listing) {
@@ -38,8 +59,11 @@ func ParariusScraperRun(outputChan chan<- *Listing) {
 	// if we land on a listing's page, scrape it
 	c.OnHTML(".listing-detail-summary", func(e *colly.HTMLElement) {
 		go func() {
-			listing := parariusListingFromHtml(e)
-			outputChan <- &listing
+			listing, err := parariusListingFromHtml(e)
+			if err == nil {
+				outputChan <- &listing
+			}
+			// todo: log error
 		}()
 	})
 

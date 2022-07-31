@@ -9,13 +9,14 @@ type Listing struct {
 	ScraperName      string
 	Url              string
 	Date             time.Time
+	Country          string
 	City             string
 	Street           string
 	StreetNumber     string
 	PostCode         string
-	Lat              float32
-	Long             float32
-	Price            float32
+	Lat              float64
+	Lng              float64
+	Price            int
 	Bedrooms         int
 	Rooms            int
 	Surface          int
