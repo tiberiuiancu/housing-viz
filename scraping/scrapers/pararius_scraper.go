@@ -1,35 +1,34 @@
-package main
+package scrapers
 
 import (
 	"fmt"
 	"github.com/gocolly/colly"
+	. "housing_viz/common"
 	"strings"
 	"time"
 )
 
 func parariusListingFromHtml(e *colly.HTMLElement) Listing {
 	return Listing{
-		scraperName:      "Pararius",
-		url:              e.Request.URL.String(),
-		date:             time.Now(),
-		city:             "",
-		street:           "",
-		streetNumber:     "43h",
-		postCode:         "1064ab",
-		lat:              1.23,
-		long:             1.23,
-		price:            1000,
-		bedrooms:         2,
-		rooms:            3,
-		surface:          100,
-		constructionYear: 1992,
-		listingType:      "apartment",
+		ScraperName:      "Pararius",
+		Url:              e.Request.URL.String(),
+		Date:             time.Now(),
+		City:             "",
+		Street:           "",
+		StreetNumber:     "43h",
+		PostCode:         "1064ab",
+		Lat:              1.23,
+		Long:             1.23,
+		Price:            1000,
+		Bedrooms:         2,
+		Rooms:            3,
+		Surface:          100,
+		ConstructionYear: 1992,
+		ListingType:      "apartment",
 	}
-	fmt.Println("new listing", e)
-	return sampleListing
 }
 
-func parariusScraperRun(lastScraped *Listing, outputChan chan<- *Listing) {
+func ParariusScraperRun(outputChan chan<- *Listing) {
 
 	c := colly.NewCollector(
 		colly.UserAgent("*"),
@@ -38,8 +37,10 @@ func parariusScraperRun(lastScraped *Listing, outputChan chan<- *Listing) {
 
 	// if we land on a listing's page, scrape it
 	c.OnHTML(".listing-detail-summary", func(e *colly.HTMLElement) {
-		listing := parariusListingFromHtml(e)
-		outputChan <- &listing
+		go func() {
+			listing := parariusListingFromHtml(e)
+			outputChan <- &listing
+		}()
 	})
 
 	c.OnHTML("a[href]", func(e *colly.HTMLElement) {

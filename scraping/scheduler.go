@@ -1,6 +1,7 @@
 package main
 
 import (
+	. "housing_viz/common"
 	"time"
 )
 
@@ -17,7 +18,7 @@ func (s Scheduler) start() {
 
 			if scraper.shouldRun() {
 				// run if necessary
-				scraper.run(nil)
+				scraper.run()
 			} else if scraper.isRunning {
 				// the goroutine was running; check if the run completed or collect results
 				for shouldReceive := true; shouldReceive; {
