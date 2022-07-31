@@ -6,21 +6,20 @@ import (
 )
 
 type Listing struct {
-	ScraperName      string
-	Url              string
-	Date             time.Time
-	Country          string
-	City             string
-	Street           string
-	PostCode         string
-	Lat              float64
-	Lng              float64
-	Price            int
-	Bedrooms         int
-	Rooms            int
-	Surface          int
-	ConstructionYear int
-	ListingType      string
+	ScraperName string
+	Url         string
+	Date        time.Time
+	Country     string
+	City        string
+	Street      string
+	PostCode    string
+	Lat         float64
+	Lng         float64
+	Price       int
+	Bedrooms    int
+	Rooms       int
+	Surface     int
+	ListingType string
 }
 
 func (listing Listing) toJson() ([]byte, error) {

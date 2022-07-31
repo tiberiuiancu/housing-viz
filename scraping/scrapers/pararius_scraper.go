@@ -1,6 +1,7 @@
 package scrapers
 
 import (
+	"errors"
 	"fmt"
 	"github.com/gocolly/colly"
 	. "housing_viz/common"
@@ -48,6 +49,38 @@ func getAddress(e *colly.HTMLElement) (string, string, string, string, error) {
 	return listingType, city, street, postCode, nil
 }
 
+func getSurface(e *colly.HTMLElement) (int, error) {
+	surface, err := e.DOM.Find(".listing-features__description--surface_area").First().Children().First().Html()
+	if err != nil {
+		return -1, err
+	}
+
+	spaceIndex := strings.Index(surface, " ")
+	if spaceIndex == -1 {
+		return -1, errors.New("Surface area could not be retrieved")
+	}
+
+	return strconv.Atoi(surface[:spaceIndex])
+}
+
+func getNumberOfRooms(e *colly.HTMLElement) (int, error) {
+	rooms, err := e.DOM.Find(".listing-features__description--number_of_rooms").First().Children().First().Html()
+	if err != nil {
+		return -1, err
+	}
+
+	return strconv.Atoi(rooms)
+}
+
+func getNumberOfBedrooms(e *colly.HTMLElement) (int, error) {
+	rooms, err := e.DOM.Find(".listing-features__description--number_of_bedrooms").First().Children().First().Html()
+	if err != nil {
+		return -1, err
+	}
+
+	return strconv.Atoi(rooms)
+}
+
 func parariusListingFromHtml(e *colly.HTMLElement) (Listing, error) {
 
 	// get price
@@ -56,11 +89,22 @@ func parariusListingFromHtml(e *colly.HTMLElement) (Listing, error) {
 		return sampleListing, err
 	}
 
-	// info
-	bedrooms := 2
-	rooms := 3
-	surface := 100
-	constructionYear := 1992
+	// surface
+	surface, err := getSurface(e)
+	if err != nil {
+		return sampleListing, err
+	}
+
+	// rooms
+	rooms, err := getNumberOfRooms(e)
+	if err != nil {
+		return sampleListing, err
+	}
+
+	bedrooms, err := getNumberOfBedrooms(e)
+	if err != nil {
+		return sampleListing, err
+	}
 
 	// address info
 	listingType, city, street, postCode, err := getAddress(e)
@@ -75,21 +119,20 @@ func parariusListingFromHtml(e *colly.HTMLElement) (Listing, error) {
 	}
 
 	return Listing{
-		ScraperName:      "Pararius",
-		Url:              e.Request.URL.String(),
-		Date:             time.Now(),
-		Country:          "Netherlands",
-		City:             city,
-		Street:           street,
-		PostCode:         postCode,
-		Lat:              lat,
-		Lng:              lng,
-		Price:            price,
-		Bedrooms:         bedrooms,
-		Rooms:            rooms,
-		Surface:          surface,
-		ConstructionYear: constructionYear,
-		ListingType:      listingType,
+		ScraperName: "Pararius",
+		Url:         e.Request.URL.String(),
+		Date:        time.Now(),
+		Country:     "Netherlands",
+		City:        city,
+		Street:      street,
+		PostCode:    postCode,
+		Lat:         lat,
+		Lng:         lng,
+		Price:       price,
+		Bedrooms:    bedrooms,
+		Rooms:       rooms,
+		Surface:     surface,
+		ListingType: listingType,
 	}, nil
 }
 
