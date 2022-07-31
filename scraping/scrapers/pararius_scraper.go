@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/gocolly/colly"
 	. "housing_viz/common"
-	"os"
 	"regexp"
 	"strconv"
 	"strings"
@@ -165,7 +164,7 @@ func ParariusScraperRun(outputChan chan<- *Listing) {
 		}
 
 		// only look for listings or list
-		if (strings.Contains(link, "apartment") || strings.Contains(link, "house")) &&
+		if strings.Contains(link, "-for-rent") &&
 			!strings.Contains(link, "login") &&
 			!strings.Contains(link, "map") &&
 			!strings.Contains(link, "subscribe") {
@@ -181,8 +180,7 @@ func ParariusScraperRun(outputChan chan<- *Listing) {
 		fmt.Println("Request URL: ", r.Request.URL, " failed with response: ", r, "\nError: ", err)
 	})
 
-	//err := c.Visit("https://www.pararius.com")
-	err := c.Visit("https://www.pararius.com/apartment-for-rent/amsterdam/acef39ca/jacob-van-lennepkade")
+	err := c.Visit("https://www.pararius.com")
 	if err != nil {
 		fmt.Println(err)
 	}

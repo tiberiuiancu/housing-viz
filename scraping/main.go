@@ -3,21 +3,20 @@ package main
 import (
 	. "housing_viz/common"
 	"housing_viz/scraping/scrapers"
+	"time"
 )
 
 func main() {
-	//Scheduler{
-	//	scrapers: []Scraper{
-	//		{
-	//			name:        "Dummy",
-	//			exec:        scrapers.DummyScraperRun,
-	//			channel:     make(chan *Listing),
-	//			nextRunTime: time.Now(),
-	//			cooldown:    time.Second * 10,
-	//			isRunning:   false,
-	//		},
-	//	},
-	//}.start()
-
-	scrapers.ParariusScraperRun(make(chan *Listing))
+	Scheduler{
+		scrapers: []Scraper{
+			{
+				name:        "Pararius",
+				exec:        scrapers.ParariusScraperRun,
+				channel:     make(chan *Listing),
+				nextRunTime: time.Now(),
+				cooldown:    time.Second * 1000,
+				isRunning:   false,
+			},
+		},
+	}.start()
 }
