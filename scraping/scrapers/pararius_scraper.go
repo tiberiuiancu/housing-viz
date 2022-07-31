@@ -4,27 +4,72 @@ import (
 	"fmt"
 	"github.com/gocolly/colly"
 	. "housing_viz/common"
+	"regexp"
+	"strconv"
 	"strings"
 	"time"
 )
 
+func getListingPrice(e *colly.HTMLElement) (int, error) {
+	price, err := e.DOM.Find(".listing-detail-summary__price").First().Html()
+	if err != nil {
+		return 0, err
+	}
+	price = regexp.MustCompile("\\d*,?\\d+").FindString(price)
+	price = strings.ReplaceAll(price, ",", "")
+	priceInt, err := strconv.Atoi(price)
+	if err != nil {
+		return 0, err
+	}
+
+	return priceInt, nil
+}
+
+func getAddress(e *colly.HTMLElement) (string, string, string, string, error) {
+	title, err := e.DOM.Find(".listing-detail-summary__title").First().Html()
+	if err != nil {
+		return "", "", "", "", err
+	}
+
+	// get information from title
+	titleSplit := strings.Split(title, " ")
+	listingType := titleSplit[2]
+	city := titleSplit[len(titleSplit)-1]
+	street := strings.Join(titleSplit[3:len(titleSplit)-2], " ")
+
+	// get postcode from subtitle
+	subtitle, err := e.DOM.Find(".listing-detail-summary__location").First().Html()
+	if err != nil {
+		return "", "", "", "", err
+	}
+	subtitle = strings.ReplaceAll(subtitle, " ", "")
+	postCode := subtitle[:6]
+
+	return listingType, city, street, postCode, nil
+}
+
 func parariusListingFromHtml(e *colly.HTMLElement) (Listing, error) {
+
+	// get price
+	price, err := getListingPrice(e)
+	if err != nil {
+		return sampleListing, err
+	}
+
 	// info
-	price := 1000
 	bedrooms := 2
 	rooms := 3
 	surface := 100
 	constructionYear := 1992
-	listingType := "apartment"
 
 	// address info
-	country := "NL"
-	city := "Amsterdam"
-	street := "street"
-	streetNumber := "43h"
-	postCode := "1064ab"
-	lat, lng, err := ResolveAddressToCoordinates(postCode)
+	listingType, city, street, postCode, err := getAddress(e)
+	if err != nil {
+		return sampleListing, err
+	}
 
+	// get latitude and longitude from address
+	lat, lng, err := ResolveAddressToCoordinates(postCode)
 	if err != nil {
 		return sampleListing, err
 	}
@@ -33,10 +78,9 @@ func parariusListingFromHtml(e *colly.HTMLElement) (Listing, error) {
 		ScraperName:      "Pararius",
 		Url:              e.Request.URL.String(),
 		Date:             time.Now(),
-		Country:          country,
+		Country:          "Netherlands",
 		City:             city,
 		Street:           street,
-		StreetNumber:     streetNumber,
 		PostCode:         postCode,
 		Lat:              lat,
 		Lng:              lng,
@@ -94,7 +138,7 @@ func ParariusScraperRun(outputChan chan<- *Listing) {
 	})
 
 	//err := c.Visit("https://www.pararius.com")
-	err := c.Visit("https://www.pararius.com/apartment-for-rent/rotterdam/64a01901/nico-koomanskade")
+	err := c.Visit("https://www.pararius.com/apartment-for-rent/rotterdam/376bfeef/laan-op-zuid")
 	if err != nil {
 		fmt.Println(err)
 	}

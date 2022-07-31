@@ -12,7 +12,6 @@ var sampleListing = Listing{
 	Country:          "NL",
 	City:             "Amsterdam",
 	Street:           "Street name",
-	StreetNumber:     "43h",
 	PostCode:         "1064ab",
 	Lat:              1.23,
 	Lng:              1.23,

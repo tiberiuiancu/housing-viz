@@ -53,7 +53,7 @@ type mapsApiResponse struct {
 func ResolveAddressToCoordinates(address string) (float64, float64, error) {
 	// make request url
 	apiKey := os.Getenv("MAPS_API_KEY")
-	address = strings.Replace(address, " ", "+", -1)
+	address = strings.ReplaceAll(address, " ", "+")
 	request := "https://maps.googleapis.com/maps/api/geocode/json?address=" + address + "&key=" + apiKey
 
 	// request

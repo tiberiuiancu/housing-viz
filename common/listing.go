@@ -12,7 +12,6 @@ type Listing struct {
 	Country          string
 	City             string
 	Street           string
-	StreetNumber     string
 	PostCode         string
 	Lat              float64
 	Lng              float64
