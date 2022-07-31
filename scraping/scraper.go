@@ -1,6 +1,8 @@
 package main
 
-import "time"
+import (
+	"time"
+)
 
 type Runnable func(lastScraped *Listing, outputChan chan<- *Listing)
 

@@ -1,6 +1,8 @@
 package main
 
-import "time"
+import (
+	"time"
+)
 
 var sampleListing = Listing{
 	scraperName:      "Dummy",
