@@ -16,9 +16,10 @@ type Scraper struct {
 	isRunning   bool
 }
 
-func (s *Scraper) reschedule() {
+func (s *Scraper) reschedule() time.Time {
 	s.isRunning = false
 	s.nextRunTime = time.Now().Local().Add(s.cooldown)
+	return s.nextRunTime
 }
 
 func (s Scraper) shouldRun() bool {

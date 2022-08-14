@@ -86,36 +86,36 @@ func parariusListingFromHtml(e *colly.HTMLElement) (Listing, error) {
 	// get price
 	price, err := getListingPrice(e)
 	if err != nil {
-		return sampleListing, err
+		return SampleListing, err
 	}
 
 	// surface
 	surface, err := getSurface(e)
 	if err != nil {
-		return sampleListing, err
+		return SampleListing, err
 	}
 
 	// rooms
 	rooms, err := getNumberOfRooms(e)
 	if err != nil {
-		return sampleListing, err
+		return SampleListing, err
 	}
 
 	bedrooms, err := getNumberOfBedrooms(e)
 	if err != nil {
-		return sampleListing, err
+		return SampleListing, err
 	}
 
 	// address info
 	listingType, city, street, postCode, err := getAddress(e)
 	if err != nil {
-		return sampleListing, err
+		return SampleListing, err
 	}
 
 	// get latitude and longitude from address
 	lat, lng, err := ResolveAddressToCoordinates(postCode)
 	if err != nil {
-		return sampleListing, err
+		return SampleListing, err
 	}
 
 	return Listing{

@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-var sampleListing = Listing{
+var SampleListing = Listing{
 	ScraperName: "Dummy",
 	Url:         "example.com/listing123",
 	Date:        time.Now(),
@@ -24,7 +24,7 @@ var sampleListing = Listing{
 
 func DummyScraperRun(outputChan chan<- *Listing) {
 	time.Sleep(time.Second * 3)
-	outputChan <- &sampleListing
+	outputChan <- &SampleListing
 	time.Sleep(time.Second * 4)
 	outputChan <- nil
 }
