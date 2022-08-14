@@ -1,27 +1,22 @@
 package common
 
 import (
-	"encoding/json"
 	"time"
 )
 
 type Listing struct {
-	ScraperName string
-	Url         string
-	Date        time.Time
-	Country     string
-	City        string
-	Street      string
-	PostCode    string
-	Lat         float64
-	Lng         float64
-	Price       int
-	Bedrooms    int
-	Rooms       int
-	Surface     int
-	ListingType string
-}
-
-func (listing Listing) toJson() ([]byte, error) {
-	return json.Marshal(listing)
+	ScraperName string    `bson:"scraper_name"`
+	Url         string    `bson:"url"`
+	Date        time.Time `bson:"date"`
+	Country     string    `bson:"country"`
+	City        string    `bson:"city"`
+	Street      string    `bson:"street"`
+	PostCode    string    `bson:"post_code"`
+	Lat         float64   `bson:"lat"`
+	Lng         float64   `bson:"lng"`
+	Price       int       `bson:"price"`
+	Bedrooms    int       `bson:"bedrooms"`
+	Rooms       int       `bson:"rooms"`
+	Surface     int       `bson:"surface"`
+	ListingType string    `bson:"listing_type"`
 }
