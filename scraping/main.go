@@ -1,13 +1,26 @@
 package main
 
 import (
+	"github.com/joho/godotenv"
 	. "housing_viz/common"
 	"housing_viz/scraping/scrapers"
 	"log"
+	"os"
 	"time"
 )
 
+func loadEnv() {
+	if err := godotenv.Load(".env"); err != nil {
+		panic(err)
+	}
+}
+
 func main() {
+	// load env variables
+	if os.Getenv("DOCKER") != "" {
+		loadEnv()
+	}
+
 	log.Println("Initializing mongodb connection")
 	var db MongoConn
 

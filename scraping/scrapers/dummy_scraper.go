@@ -22,9 +22,10 @@ var SampleListing = Listing{
 	ListingType: "apartment",
 }
 
-func DummyScraperRun(outputChan chan<- *Listing) {
+func DummyScraperRun(outputChan chan<- *Listing) error {
 	time.Sleep(time.Second * 3)
 	outputChan <- &SampleListing
 	time.Sleep(time.Second * 4)
 	outputChan <- nil
+	return nil
 }

@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-type Runnable func(outputChan chan<- *Listing)
+type Runnable func(outputChan chan<- *Listing) error
 
 type Scraper struct {
 	name        string
