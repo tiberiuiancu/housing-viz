@@ -6,7 +6,17 @@ services:
     container_name: mongodb
     ports:
       - "27017:27017"
-    env_file:
-      - .env
+    environment:
+      - MONGO_INITDB_DATABASE=${MONGO_INITDB_DATABASE}
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
     volumes:
       - "./mongo-data:/data/db"
+
+  scraping:
+    image: golang
+    container_name: scraping
+    environment:
+      - MAPS_API_KEY=${MAPS_API_KEY}
+      - MONGODB_URI=${MONGODB_URI}
+      - DOCKER=TRUE

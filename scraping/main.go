@@ -16,8 +16,8 @@ func loadEnv() {
 }
 
 func main() {
-	// load env variables
-	if os.Getenv("DOCKER") != "" {
+	// load env variables if we're not running in docker
+	if os.Getenv("DOCKER") == "" {
 		loadEnv()
 	}
 
