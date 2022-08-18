@@ -41,7 +41,7 @@ func (m MongoConn) RetrieveRecords(count int64) ([]Listing, error) {
 	}
 
 	for res.Next(context.TODO()) {
-		//Create a value into which the single document can be decoded
+		// Create a value into which the single document can be decoded
 		var elem Listing
 		err := res.Decode(&elem)
 		if err != nil {
