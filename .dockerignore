@@ -1,0 +1,5 @@
+.mongo-data/
+readme.md
+.gitignore
+docs/
+.env

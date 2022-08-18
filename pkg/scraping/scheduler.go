@@ -1,6 +1,7 @@
 package scraping
 
 import (
+	"go.mongodb.org/mongo-driver/bson"
 	. "housing_viz/pkg/common"
 	"log"
 	"time"
@@ -10,10 +11,23 @@ type Scheduler struct {
 	Scrapers []Scraper
 }
 
+func isDuplicate(listing Listing, db MongoConn) bool {
+	// basic duplication check by url
+	return db.Exists(
+		bson.D{{"url", listing.Url}},
+	)
+}
+
 func syncListing(listing Listing, db MongoConn) {
+	// only sync non-dups
+	if isDuplicate(listing, db) {
+		log.Println("Found duplicate", listing.Url)
+		return
+	}
+
 	_, err := db.Insert(listing)
 	if err != nil {
-		log.Println("Error while syncing log", err)
+		log.Println("Error while syncing listing", err)
 	}
 }
 
@@ -24,7 +38,7 @@ func (s Scheduler) Start(db MongoConn) {
 
 			if scraper.shouldRun() {
 				// run if necessary
-				log.Println("- scraper should run...starting in background")
+				log.Println("Starting scraper", scraper.Name, "in background")
 				scraper.run()
 			} else if scraper.IsRunning {
 				// count number of received records
@@ -52,7 +66,7 @@ func (s Scheduler) Start(db MongoConn) {
 					}
 				}
 
-				log.Println("- received", nRecv, "listings")
+				log.Println("Received", nRecv, "listings from", scraper.Name)
 			}
 		}
 
