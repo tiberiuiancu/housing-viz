@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-type Runnable func(outputChan chan<- *Listing) error
+type Runnable func(outputChan chan<- *Listing, isDuplicate func(string) bool) error
 
 type Scraper struct {
 	Name        string
@@ -26,7 +26,7 @@ func (s Scraper) shouldRun() bool {
 	return !s.IsRunning && s.NextRunTime.Before(time.Now())
 }
 
-func (s *Scraper) run() {
+func (s *Scraper) run(isDuplicate func(string) bool) {
 	s.IsRunning = true
-	go s.Exec(s.Channel)
+	go s.Exec(s.Channel, isDuplicate)
 }

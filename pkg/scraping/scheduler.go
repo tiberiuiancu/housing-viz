@@ -11,20 +11,7 @@ type Scheduler struct {
 	Scrapers []Scraper
 }
 
-func isDuplicate(listing Listing, db MongoConn) bool {
-	// basic duplication check by url
-	return db.Exists(
-		bson.D{{"url", listing.Url}},
-	)
-}
-
 func syncListing(listing Listing, db MongoConn) {
-	// only sync non-dups
-	if isDuplicate(listing, db) {
-		log.Println("Found duplicate", listing.Url)
-		return
-	}
-
 	_, err := db.Insert(listing)
 	if err != nil {
 		log.Println("Error while syncing listing", err)
@@ -37,9 +24,14 @@ func (s Scheduler) Start(db MongoConn) {
 			scraper := &s.Scrapers[idx]
 
 			if scraper.shouldRun() {
-				// run if necessary
+				// run scraper
 				log.Println("Starting scraper", scraper.Name, "in background")
-				scraper.run()
+				scraper.run(func(link string) bool {
+					// check if url is already in database to avoid useless requests to geocoding API
+					return db.Exists(
+						bson.D{{"url", link}},
+					)
+				})
 			} else if scraper.IsRunning {
 				// count number of received records
 				nRecv := 0
@@ -66,7 +58,7 @@ func (s Scheduler) Start(db MongoConn) {
 					}
 				}
 
-				log.Println("Received", nRecv, "listings from", scraper.Name)
+				log.Println("Received", nRecv, "new listings from", scraper.Name)
 			}
 		}
 

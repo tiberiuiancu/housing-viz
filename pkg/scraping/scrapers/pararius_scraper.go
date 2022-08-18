@@ -56,7 +56,7 @@ func getSurface(e *colly.HTMLElement) (int, error) {
 
 	spaceIndex := strings.Index(surface, " ")
 	if spaceIndex == -1 {
-		return -1, errors.New("Surface area could not be retrieved")
+		return -1, errors.New("surface area could not be retrieved")
 	}
 
 	return strconv.Atoi(surface[:spaceIndex])
@@ -135,7 +135,7 @@ func parariusListingFromHtml(e *colly.HTMLElement) (Listing, error) {
 	}, nil
 }
 
-func ParariusScraperRun(outputChan chan<- *Listing) error {
+func ParariusScraperRun(outputChan chan<- *Listing, isDuplicate func(string) bool) error {
 
 	c := colly.NewCollector(
 		colly.UserAgent("*"),
@@ -165,18 +165,11 @@ func ParariusScraperRun(outputChan chan<- *Listing) error {
 		if strings.Contains(link, "-for-rent") &&
 			!strings.Contains(link, "login") &&
 			!strings.Contains(link, "map") &&
-			!strings.Contains(link, "subscribe") {
+			!strings.Contains(link, "subscribe") &&
+			!isDuplicate(link) {
 			c.Visit(link)
 		}
 	})
-
-	//c.OnRequest(func(r *colly.Request) {
-	//	fmt.Println("Visiting", r.URL.String())
-	//})
-	//
-	//c.OnError(func(r *colly.Response, err error) {
-	//	fmt.Println("Request URL: ", r.Request.URL, " failed with response: ", r, "\nError: ", err)
-	//})
 
 	err := c.Visit("https://www.pararius.com")
 	if err != nil {
