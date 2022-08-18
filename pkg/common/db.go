@@ -5,7 +5,6 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"log"
 	"os"
 )
 
@@ -30,31 +29,38 @@ func (m MongoConn) Insert(listing Listing) (*mongo.InsertOneResult, error) {
 	return res, err
 }
 
-func (m MongoConn) RetrieveRecords(count int64) ([]Listing, error) {
+func (m MongoConn) Exists(query bson.D) bool {
+	var result bson.M
+	return m.coll.FindOne(context.TODO(), query).Decode(&result) != nil
+}
+
+func (m MongoConn) FindAll(query bson.D) ([]Listing, error) {
+	return m.FindAllMaxN(query, -1)
+}
+
+func (m MongoConn) FindAllMaxN(query bson.D, count int64) ([]Listing, error) {
 	// retrieve count records
 	findOptions := options.Find()
-	findOptions.SetLimit(count)
+	if count > 0 {
+		findOptions.SetLimit(count)
+	}
+
 	var results []Listing
-	res, err := m.coll.Find(context.TODO(), bson.D{{}}, findOptions)
+	res, err := m.coll.Find(context.TODO(), query, findOptions)
 	if err != nil {
-		return []Listing{}, err
+		return results, err
 	}
 
 	for res.Next(context.TODO()) {
 		// Create a value into which the single document can be decoded
-		var elem Listing
-		err := res.Decode(&elem)
+		var listing Listing
+		err := res.Decode(&listing)
 		if err != nil {
-			log.Fatal(err)
+			continue
 		}
 
-		results = append(results, elem)
+		results = append(results, listing)
 	}
 
 	return results, nil
-}
-
-func (m MongoConn) Exists(query bson.D) bool {
-	var result bson.M
-	return m.coll.FindOne(context.TODO(), query).Decode(&result) != nil
 }

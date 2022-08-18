@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+  {{range .}}
+  <ul>
+    <li><a href="{{.Url}}">url</a></li>
+    <li>{{.City}}</li>
+    <li>{{.PostCode}}</li>
+  </ul>
+  {{end}}
+</body>
+</html>

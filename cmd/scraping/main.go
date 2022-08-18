@@ -1,7 +1,6 @@
 package main
 
 import (
-	"github.com/joho/godotenv"
 	. "housing_viz/pkg/common"
 	. "housing_viz/pkg/scraping"
 	"housing_viz/pkg/scraping/scrapers"
@@ -10,16 +9,10 @@ import (
 	"time"
 )
 
-func loadEnv() {
-	if err := godotenv.Load(".env"); err != nil {
-		panic(err)
-	}
-}
-
 func main() {
 	// load env variables if we're not running in docker
-	if os.Getenv("DOCKER") == "" {
-		loadEnv()
+	if os.Getenv("DOCKER") != "TRUE" {
+		LoadEnv()
 	}
 
 	log.Println("Initializing mongodb connection")
