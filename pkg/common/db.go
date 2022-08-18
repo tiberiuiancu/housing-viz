@@ -30,7 +30,7 @@ func (m MongoConn) Insert(listing Listing) (*mongo.InsertOneResult, error) {
 	return res, err
 }
 
-func (m MongoConn) RetrieveSomeRecords(count int64) ([]Listing, error) {
+func (m MongoConn) RetrieveRecords(count int64) ([]Listing, error) {
 	// retrieve count records
 	findOptions := options.Find()
 	findOptions.SetLimit(count)
@@ -52,4 +52,9 @@ func (m MongoConn) RetrieveSomeRecords(count int64) ([]Listing, error) {
 	}
 
 	return results, nil
+}
+
+func (m MongoConn) Exists(query bson.D) bool {
+	var result bson.M
+	return m.coll.FindOne(context.TODO(), query).Decode(&result) != nil
 }
