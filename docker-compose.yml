@@ -25,3 +25,17 @@ services:
       - database
     links:
       - database:database
+
+  website:
+    build: .
+    command: [ "go", "run", "cmd/web/main.go" ]
+    container_name: website-container
+    environment:
+      - MONGODB_URI=${MONGODB_URI}
+      - DOCKER=TRUE
+    depends_on:
+      - database
+    links:
+      - database:database
+    ports:
+      - "8080:8080"
