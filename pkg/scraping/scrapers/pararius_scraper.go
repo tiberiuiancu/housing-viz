@@ -2,9 +2,8 @@ package scrapers
 
 import (
 	"errors"
-	"fmt"
 	"github.com/gocolly/colly"
-	. "housing_viz/common"
+	. "housing_viz/pkg/common"
 	"regexp"
 	"strconv"
 	"strings"
@@ -86,36 +85,36 @@ func parariusListingFromHtml(e *colly.HTMLElement) (Listing, error) {
 	// get price
 	price, err := getListingPrice(e)
 	if err != nil {
-		return sampleListing, err
+		return SampleListing, err
 	}
 
 	// surface
 	surface, err := getSurface(e)
 	if err != nil {
-		return sampleListing, err
+		return SampleListing, err
 	}
 
 	// rooms
 	rooms, err := getNumberOfRooms(e)
 	if err != nil {
-		return sampleListing, err
+		return SampleListing, err
 	}
 
 	bedrooms, err := getNumberOfBedrooms(e)
 	if err != nil {
-		return sampleListing, err
+		return SampleListing, err
 	}
 
 	// address info
 	listingType, city, street, postCode, err := getAddress(e)
 	if err != nil {
-		return sampleListing, err
+		return SampleListing, err
 	}
 
 	// get latitude and longitude from address
 	lat, lng, err := ResolveAddressToCoordinates(postCode)
 	if err != nil {
-		return sampleListing, err
+		return SampleListing, err
 	}
 
 	return Listing{
@@ -136,7 +135,7 @@ func parariusListingFromHtml(e *colly.HTMLElement) (Listing, error) {
 	}, nil
 }
 
-func ParariusScraperRun(outputChan chan<- *Listing) {
+func ParariusScraperRun(outputChan chan<- *Listing) error {
 
 	c := colly.NewCollector(
 		colly.UserAgent("*"),
@@ -150,7 +149,6 @@ func ParariusScraperRun(outputChan chan<- *Listing) {
 			if err == nil {
 				outputChan <- &listing
 			}
-			// todo: log error
 		}()
 	})
 
@@ -172,16 +170,19 @@ func ParariusScraperRun(outputChan chan<- *Listing) {
 		}
 	})
 
-	c.OnRequest(func(r *colly.Request) {
-		fmt.Println("Visiting", r.URL.String())
-	})
-
-	c.OnError(func(r *colly.Response, err error) {
-		fmt.Println("Request URL: ", r.Request.URL, " failed with response: ", r, "\nError: ", err)
-	})
+	//c.OnRequest(func(r *colly.Request) {
+	//	fmt.Println("Visiting", r.URL.String())
+	//})
+	//
+	//c.OnError(func(r *colly.Response, err error) {
+	//	fmt.Println("Request URL: ", r.Request.URL, " failed with response: ", r, "\nError: ", err)
+	//})
 
 	err := c.Visit("https://www.pararius.com")
 	if err != nil {
-		fmt.Println(err)
+		// write nil on the channel
+		outputChan <- nil
 	}
+
+	return err
 }

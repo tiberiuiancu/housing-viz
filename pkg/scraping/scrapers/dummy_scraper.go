@@ -1,11 +1,11 @@
 package scrapers
 
 import (
-	. "housing_viz/common"
+	. "housing_viz/pkg/common"
 	"time"
 )
 
-var sampleListing = Listing{
+var SampleListing = Listing{
 	ScraperName: "Dummy",
 	Url:         "example.com/listing123",
 	Date:        time.Now(),
@@ -22,9 +22,10 @@ var sampleListing = Listing{
 	ListingType: "apartment",
 }
 
-func DummyScraperRun(outputChan chan<- *Listing) {
+func DummyScraperRun(outputChan chan<- *Listing) error {
 	time.Sleep(time.Second * 3)
-	outputChan <- &sampleListing
+	outputChan <- &SampleListing
 	time.Sleep(time.Second * 4)
 	outputChan <- nil
+	return nil
 }

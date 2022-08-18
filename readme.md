@@ -1,3 +1,3 @@
 ## Housing price visualization
 
-![Architecture](diagram.png)
+![Architecture](docs/diagram.png)

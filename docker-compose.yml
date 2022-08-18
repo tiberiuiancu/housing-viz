@@ -1,13 +1,27 @@
-# Use root/example as user/password credentials
 version: '3.1'
 
 services:
-  database-test:
+  database:
     image: mongo
-    container_name: mongo-test
+    container_name: mongodb-container
     ports:
-      - "27017-27019:27017-27019"
+      - "27017:27017"
     environment:
-      MONGO_INITDB_DATABASE: test-db
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: test
+      - MONGO_INITDB_DATABASE=${MONGO_INITDB_DATABASE}
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
+    volumes:
+      - "./.mongo-data:/data/db"
+
+  scraping:
+    build: .
+    command: ["go", "run", "cmd/scraping/main.go"]
+    container_name: scraping-container
+    environment:
+      - MAPS_API_KEY=${MAPS_API_KEY}
+      - MONGODB_URI=${MONGODB_URI}
+      - DOCKER=TRUE
+    depends_on:
+      - database
+    links:
+      - database:database
