@@ -2,8 +2,9 @@ package main
 
 import (
 	"github.com/joho/godotenv"
-	. "housing_viz/common"
-	"housing_viz/scraping/scrapers"
+	. "housing_viz/pkg/common"
+	. "housing_viz/pkg/scraping"
+	"housing_viz/pkg/scraping/scrapers"
 	"log"
 	"os"
 	"time"
@@ -30,15 +31,15 @@ func main() {
 
 	log.Println("Starting scheduler")
 	Scheduler{
-		scrapers: []Scraper{
+		Scrapers: []Scraper{
 			{
-				name:        "Pararius",
-				exec:        scrapers.ParariusScraperRun,
-				channel:     make(chan *Listing),
-				nextRunTime: time.Now(),
-				cooldown:    time.Second * 1000,
-				isRunning:   false,
+				Name:        "Pararius",
+				Exec:        scrapers.ParariusScraperRun,
+				Channel:     make(chan *Listing),
+				NextRunTime: time.Now(),
+				Cooldown:    time.Second * 1000,
+				IsRunning:   false,
 			},
 		},
-	}.start(db)
+	}.Start(db)
 }

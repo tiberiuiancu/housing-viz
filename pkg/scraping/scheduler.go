@@ -1,13 +1,13 @@
-package main
+package scraping
 
 import (
-	. "housing_viz/common"
+	. "housing_viz/pkg/common"
 	"log"
 	"time"
 )
 
 type Scheduler struct {
-	scrapers []Scraper
+	Scrapers []Scraper
 }
 
 func syncListing(listing Listing, db MongoConn) {
@@ -17,16 +17,16 @@ func syncListing(listing Listing, db MongoConn) {
 	}
 }
 
-func (s Scheduler) start(db MongoConn) {
+func (s Scheduler) Start(db MongoConn) {
 	for {
-		for idx := range s.scrapers {
-			scraper := &s.scrapers[idx]
+		for idx := range s.Scrapers {
+			scraper := &s.Scrapers[idx]
 
 			if scraper.shouldRun() {
 				// run if necessary
 				log.Println("- scraper should run...starting in background")
 				scraper.run()
-			} else if scraper.isRunning {
+			} else if scraper.IsRunning {
 				// count number of received records
 				nRecv := 0
 
@@ -34,7 +34,7 @@ func (s Scheduler) start(db MongoConn) {
 				for shouldReceive := true; shouldReceive; {
 					select {
 					// there is something to receive
-					case newListing := <-scraper.channel:
+					case newListing := <-scraper.Channel:
 						if newListing != nil {
 							// if we receive something other than nil, add it to the sync list
 							go syncListing(*newListing, db)

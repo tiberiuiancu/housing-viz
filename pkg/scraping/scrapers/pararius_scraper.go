@@ -3,7 +3,7 @@ package scrapers
 import (
 	"errors"
 	"github.com/gocolly/colly"
-	. "housing_viz/common"
+	. "housing_viz/pkg/common"
 	"regexp"
 	"strconv"
 	"strings"

@@ -1,7 +1,7 @@
 package scrapers
 
 import (
-	. "housing_viz/common"
+	. "housing_viz/pkg/common"
 	"time"
 )
 

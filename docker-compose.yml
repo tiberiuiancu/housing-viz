@@ -3,7 +3,7 @@ version: '3.1'
 services:
   database:
     image: mongo
-    container_name: mongodb
+    container_name: mongodb-container
     ports:
       - "27017:27017"
     environment:
@@ -11,12 +11,17 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
       - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
     volumes:
-      - "./mongo-data:/data/db"
+      - "./.mongo-data:/data/db"
 
   scraping:
-    image: golang
-    container_name: scraping
+    build: .
+    command: ["go", "run", "cmd/scraping/main.go"]
+    container_name: scraping-container
     environment:
       - MAPS_API_KEY=${MAPS_API_KEY}
       - MONGODB_URI=${MONGODB_URI}
       - DOCKER=TRUE
+    depends_on:
+      - database
+    links:
+      - database:database
