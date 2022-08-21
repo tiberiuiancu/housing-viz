@@ -1,7 +1,6 @@
 package scraping
 
 import (
-	"go.mongodb.org/mongo-driver/bson"
 	. "housing_viz/pkg/common"
 	"log"
 	"time"
@@ -19,12 +18,7 @@ func (s Scheduler) Start(db MongoConn) {
 			if scraper.shouldRun() {
 				// run scraper
 				log.Println("Starting scraper", scraper.Name, "in background")
-				scraper.run(func(link string) bool {
-					// check if url is already in database to avoid useless requests to geocoding API
-					return db.Exists(
-						bson.D{{"url", link}},
-					)
-				})
+				scraper.run()
 			} else if scraper.IsRunning {
 				// count number of received records
 				nRecv := 0

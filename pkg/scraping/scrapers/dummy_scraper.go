@@ -22,7 +22,7 @@ var SampleListing = Listing{
 	ListingType: "apartment",
 }
 
-func DummyScraperRun(outputChan chan<- *Listing, isDuplicate func(string) bool) error {
+func DummyScraperRun(outputChan chan<- *Listing) error {
 	time.Sleep(time.Second * 3)
 	outputChan <- &SampleListing
 	time.Sleep(time.Second * 4)

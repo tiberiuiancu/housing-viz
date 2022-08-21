@@ -136,7 +136,7 @@ func parariusListingFromHtml(e *colly.HTMLElement) (Listing, error) {
 	}, nil
 }
 
-func ParariusScraperRun(outputChan chan<- *Listing, isDuplicate func(string) bool) error {
+func ParariusScraperRun(outputChan chan<- *Listing) error {
 
 	c := colly.NewCollector(
 		colly.UserAgent("*"),
@@ -145,12 +145,14 @@ func ParariusScraperRun(outputChan chan<- *Listing, isDuplicate func(string) boo
 
 	// if we land on a listing's page, scrape it
 	c.OnHTML(".page__row--listing", func(e *colly.HTMLElement) {
-		listing, err := parariusListingFromHtml(e)
-		if err == nil {
-			outputChan <- &listing
-		} else {
-			log.Println(err)
-		}
+		go func() {
+			listing, err := parariusListingFromHtml(e)
+			if err == nil {
+				outputChan <- &listing
+			} else {
+				log.Println(err)
+			}
+		}()
 	})
 
 	c.OnHTML("a[href]", func(e *colly.HTMLElement) {
