@@ -31,7 +31,7 @@ func (m MongoConn) Insert(listing Listing) (*mongo.InsertOneResult, error) {
 
 func (m MongoConn) Exists(query bson.D) bool {
 	var result bson.M
-	return m.coll.FindOne(context.TODO(), query).Decode(&result) != nil
+	return m.coll.FindOne(context.TODO(), query).Decode(&result) == nil
 }
 
 func (m MongoConn) FindAll(query bson.D) ([]Listing, error) {

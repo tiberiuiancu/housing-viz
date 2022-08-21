@@ -150,7 +150,7 @@ func ParariusScraperRun(outputChan chan<- *Listing) error {
 			if err == nil {
 				outputChan <- &listing
 			} else {
-				log.Println(err)
+				log.Println(err, e.Request.URL)
 			}
 		}()
 	})

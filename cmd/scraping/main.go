@@ -1,6 +1,7 @@
 package main
 
 import (
+	"go.mongodb.org/mongo-driver/bson"
 	. "housing_viz/pkg/common"
 	. "housing_viz/pkg/scraping"
 	"housing_viz/pkg/scraping/scrapers"
@@ -21,6 +22,9 @@ func main() {
 	if err := db.InitConn(); err != nil {
 		panic(err)
 	}
+
+	res, _ := db.FindAll(bson.D{{}})
+	log.Println("Number of records:", len(res))
 
 	log.Println("Starting scheduler")
 	Scheduler{

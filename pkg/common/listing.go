@@ -1,6 +1,7 @@
 package common
 
 import (
+	"go.mongodb.org/mongo-driver/bson"
 	"log"
 	"time"
 )
@@ -25,7 +26,18 @@ type Listing struct {
 	ListingType     string    `bson:"listing_type"`
 }
 
+func (listing Listing) IsDuplicate(db MongoConn) bool {
+	return db.Exists(
+		bson.D{{"url", listing.Url}},
+	)
+}
+
 func (listing Listing) Sync(db MongoConn) {
+	// first check not duplicate
+	if listing.IsDuplicate(db) {
+		return
+	}
+
 	// before sync derive additional attribute NormalizedPrice
 	listing.NormalizedPrice = float64(listing.Price) / float64(listing.Surface)
 
