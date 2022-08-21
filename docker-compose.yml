@@ -19,7 +19,7 @@ services:
     container_name: scraping-container
     environment:
       - MAPS_API_KEY=${MAPS_API_KEY}
-      - MONGODB_URI=${MONGODB_URI}
+      - MONGODB_URI=${MONGODB_DOCKER_URI}
       - DOCKER=TRUE
     depends_on:
       - database
@@ -31,7 +31,7 @@ services:
     command: [ "go", "run", "cmd/web/main.go" ]
     container_name: website-container
     environment:
-      - MONGODB_URI=${MONGODB_URI}
+      - MONGODB_URI=${MONGODB_DOCKER_URI}
       - MAPS_API_KEY=${MAPS_API_KEY}
       - DOCKER=TRUE
     depends_on:
