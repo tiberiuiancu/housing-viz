@@ -111,6 +111,9 @@ func parariusListingFromHtml(e *colly.HTMLElement) (Listing, error) {
 		return SampleListing, err
 	}
 
+	// derive address group
+	addressGroup := "Netherlands " + postCode[:4]
+
 	// get latitude and longitude from address
 	lat, lng, err := ResolveAddressToCoordinates(postCode)
 	if err != nil {
@@ -118,20 +121,21 @@ func parariusListingFromHtml(e *colly.HTMLElement) (Listing, error) {
 	}
 
 	return Listing{
-		ScraperName: "Pararius",
-		Url:         e.Request.URL.String(),
-		Date:        time.Now(),
-		Country:     "Netherlands",
-		City:        city,
-		Street:      street,
-		PostCode:    postCode,
-		Lat:         lat,
-		Lng:         lng,
-		Price:       price,
-		Bedrooms:    bedrooms,
-		Rooms:       rooms,
-		Surface:     surface,
-		ListingType: listingType,
+		ScraperName:  "Pararius",
+		Url:          e.Request.URL.String(),
+		Date:         time.Now(),
+		Country:      "Netherlands",
+		City:         city,
+		Street:       street,
+		PostCode:     postCode,
+		AddressGroup: addressGroup,
+		Lat:          lat,
+		Lng:          lng,
+		Price:        price,
+		Bedrooms:     bedrooms,
+		Rooms:        rooms,
+		Surface:      surface,
+		ListingType:  listingType,
 	}, nil
 }
 
