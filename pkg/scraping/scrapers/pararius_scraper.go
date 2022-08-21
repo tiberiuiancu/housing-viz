@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/gocolly/colly"
 	. "housing_viz/pkg/common"
+	"log"
 	"regexp"
 	"strconv"
 	"strings"
@@ -114,28 +115,24 @@ func parariusListingFromHtml(e *colly.HTMLElement) (Listing, error) {
 	// derive address group
 	addressGroup := "Netherlands " + postCode[:4]
 
-	// get latitude and longitude from address
-	lat, lng, err := ResolveAddressToCoordinates(postCode)
-	if err != nil {
-		return SampleListing, err
-	}
+	// add geocoding address
+	geocodeAddress := postCode
 
 	return Listing{
-		ScraperName:  "Pararius",
-		Url:          e.Request.URL.String(),
-		Date:         time.Now(),
-		Country:      "Netherlands",
-		City:         city,
-		Street:       street,
-		PostCode:     postCode,
-		AddressGroup: addressGroup,
-		Lat:          lat,
-		Lng:          lng,
-		Price:        price,
-		Bedrooms:     bedrooms,
-		Rooms:        rooms,
-		Surface:      surface,
-		ListingType:  listingType,
+		ScraperName:    "Pararius",
+		Url:            e.Request.URL.String(),
+		Date:           time.Now(),
+		Country:        "Netherlands",
+		City:           city,
+		Street:         street,
+		PostCode:       postCode,
+		AddressGroup:   addressGroup,
+		GeocodeAddress: geocodeAddress,
+		Price:          price,
+		Bedrooms:       bedrooms,
+		Rooms:          rooms,
+		Surface:        surface,
+		ListingType:    listingType,
 	}, nil
 }
 
@@ -148,12 +145,12 @@ func ParariusScraperRun(outputChan chan<- *Listing, isDuplicate func(string) boo
 
 	// if we land on a listing's page, scrape it
 	c.OnHTML(".page__row--listing", func(e *colly.HTMLElement) {
-		go func() {
-			listing, err := parariusListingFromHtml(e)
-			if err == nil {
-				outputChan <- &listing
-			}
-		}()
+		listing, err := parariusListingFromHtml(e)
+		if err == nil {
+			outputChan <- &listing
+		} else {
+			log.Println(err)
+		}
 	})
 
 	c.OnHTML("a[href]", func(e *colly.HTMLElement) {
@@ -169,8 +166,7 @@ func ParariusScraperRun(outputChan chan<- *Listing, isDuplicate func(string) boo
 		if strings.Contains(link, "-for-rent") &&
 			!strings.Contains(link, "login") &&
 			!strings.Contains(link, "map") &&
-			!strings.Contains(link, "subscribe") &&
-			!isDuplicate(link) {
+			!strings.Contains(link, "subscribe") {
 			c.Visit(link)
 		}
 	})
@@ -179,6 +175,7 @@ func ParariusScraperRun(outputChan chan<- *Listing, isDuplicate func(string) boo
 	if err != nil {
 		// write nil on the channel
 		outputChan <- nil
+		log.Println(err)
 	}
 
 	return err

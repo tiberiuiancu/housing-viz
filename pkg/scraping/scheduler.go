@@ -11,17 +11,6 @@ type Scheduler struct {
 	Scrapers []Scraper
 }
 
-func syncListing(listing Listing, db MongoConn) {
-	// before sync derive additional attribute NormalizedPrice
-	listing.NormalizedPrice = float64(listing.Price) / float64(listing.Surface)
-
-	// try to insert into datanase
-	_, err := db.Insert(listing)
-	if err != nil {
-		log.Println("Error while syncing listing", err)
-	}
-}
-
 func (s Scheduler) Start(db MongoConn) {
 	for {
 		for idx := range s.Scrapers {
@@ -47,7 +36,7 @@ func (s Scheduler) Start(db MongoConn) {
 					case newListing := <-scraper.Channel:
 						if newListing != nil {
 							// if we receive something other than nil, add it to the sync list
-							go syncListing(*newListing, db)
+							go newListing.Sync(db)
 							nRecv += 1
 						} else {
 							// if we receive nil it's a sign the goroutine finished
