@@ -32,6 +32,7 @@ services:
     container_name: website-container
     environment:
       - MONGODB_URI=${MONGODB_URI}
+      - MAPS_API_KEY=${MAPS_API_KEY}
       - DOCKER=TRUE
     depends_on:
       - database
