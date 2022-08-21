@@ -98,12 +98,14 @@ func parariusListingFromHtml(e *colly.HTMLElement) (Listing, error) {
 	// rooms
 	rooms, err := getNumberOfRooms(e)
 	if err != nil {
-		return SampleListing, err
+		log.Println("WARNING:", err)
+		rooms = -1
 	}
 
 	bedrooms, err := getNumberOfBedrooms(e)
 	if err != nil {
-		return SampleListing, err
+		log.Println("WARNING:", err)
+		bedrooms = -1
 	}
 
 	// address info
