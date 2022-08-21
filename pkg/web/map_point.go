@@ -3,9 +3,9 @@ package web
 import "housing_viz/pkg/common"
 
 type mapPoint struct {
-	lat    float64
-	lng    float64
-	weight float64
+	Lat    float64
+	Lng    float64
+	Weight float64
 }
 
 func convertListingsToMapPoint(listings []common.Listing) []mapPoint {

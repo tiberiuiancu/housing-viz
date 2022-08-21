@@ -42,29 +42,29 @@ func TestListingsToMapPointConversion(t *testing.T) {
 
 	expectedMapPoints := []mapPoint{
 		{
-			lat:    0.12,
-			lng:    0.12,
-			weight: 100,
+			Lat:    0.12,
+			Lng:    0.12,
+			Weight: 100,
 		},
 		{
-			lat:    0.13,
-			lng:    0.13,
-			weight: float64(100) / float64(3),
+			Lat:    0.13,
+			Lng:    0.13,
+			Weight: float64(100) / float64(3),
 		},
 		{
-			lat:    0.14,
-			lng:    0.14,
-			weight: float64(200) / float64(3),
+			Lat:    0.14,
+			Lng:    0.14,
+			Weight: float64(200) / float64(3),
 		},
 		{
-			lat:    1.1,
-			lng:    1.1,
-			weight: 150,
+			Lat:    1.1,
+			Lng:    1.1,
+			Weight: 150,
 		},
 		{
-			lat:    1.2,
-			lng:    1.2,
-			weight: 50,
+			Lat:    1.2,
+			Lng:    1.2,
+			Weight: 50,
 		},
 	}
 
