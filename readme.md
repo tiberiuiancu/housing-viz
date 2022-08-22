@@ -20,3 +20,7 @@ The API key must have the following services enabled:
 To start all components, simply run
 
     docker-compose up
+
+### Screenshot
+
+![Screenshot](docs/screenshot.png)
