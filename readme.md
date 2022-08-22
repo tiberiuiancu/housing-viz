@@ -1,8 +1,11 @@
 ## Housing price visualization
 
+Website to visualize rent prices from scraped housing websites.
+
+### Architecture 
 ![Architecture](docs/diagram.png)
 
-### Sample environment
+### Sample environment variables
     MONGO_INITDB_DATABASE=test-db
     MONGO_INITDB_ROOT_USERNAME=user
     MONGO_INITDB_ROOT_PASSWORD=pass
